@@ -3,10 +3,12 @@ import random
 import time
 from datetime import datetime, timedelta
 from urllib.parse import urlencode, quote
+
+# 打印日志
 def log(message):
     logging.info(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) + ' ' + message)
 
-
+# 生成随机数
 def generate_random_decimal(decimal_places):
 
     # 生成0到1之间的随机数
@@ -18,18 +20,23 @@ def generate_random_decimal(decimal_places):
 
     return result
 
-def get_datatime():
-    return time.strftime('%Y-%m-%d %H:%M', time.localtime())
-def get_datatime_second():
-    return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
-def get_date():
-    return time.strftime('%Y-%m-%d', time.localtime())
+def get_datetime(offset_days: int = 0) -> dict:
+    target_time = datetime.now() + timedelta(days=offset_days)
+    ret = {
+        's': target_time.strftime('%Y-%m-%d %H:%M:%S'),
+        'm': target_time.strftime('%Y-%m-%d %H:%M'),
+        'd': target_time.strftime('%Y-%m-%d')
+    }
+    return ret
 
+
+# 自定义拼接参数
 def custom_quote(s, safe='/', encoding=None, errors=None):
     return quote(s, safe=safe + ':', encoding=encoding, errors=errors)
 def get_url_with_params(url , params):
     return url + "?" + urlencode(params, quote_via=custom_quote)
 
+# 检查时间
 def check_time(hour: int, minute: int = 0):
     now = time.localtime()
     current_hour = now.tm_hour
@@ -40,6 +47,8 @@ def check_time(hour: int, minute: int = 0):
     else:
         return False
 
+
+# 编码
 def encrypt(text: str, key: str = "wx3cba883abac619bb") -> str:
     t = ["", "g", "h", "i"]
     result = []
@@ -56,7 +65,7 @@ def encrypt(text: str, key: str = "wx3cba883abac619bb") -> str:
         n += 1
     return "".join(result)
 
-
+# 解码
 def decrypt(cipher: str, key: str = "wx3cba883abac619bb") -> str:
     # 先把补位替换回来
     cipher = cipher.replace("g", "000").replace("h", "00").replace("i", "0")
